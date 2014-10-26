@@ -22,6 +22,30 @@
 	(progn (dohash (k v hash-table) (setf (gethash k table) v)) table))))
 
 
+(defun ->hash-table (type items &key (test 'equal))
+  (let ((table (make-hash-table :test test)))
+  (if (or (eq type 'list) (eq type 'plist))
+      (loop for i in (mapcar 'list items (rest items)) by #'cddr
+	 do (setf (gethash (car i) table) (cadr i))))
+  (if (eq type 'alist)
+      (loop for i in items
+	 do (setf (gethash (car i) table) (cdr i))))
+  table))
+
+
+(defun hash-table-from-list (items &key (test 'equal))
+  (->hash-table 'list items :test test))
+
+
+(defun hash-table-from-alist (items &key (test 'equal))
+  (->hash-table 'alist items :test test))
+
+
+(defun hash-table-from-plist (items &key (test 'eq))
+  (->hash-table 'plist items :test test))
+
+
+
 (defun hash-union (func &rest hashes)
   "returns the union of hashes, merged using func"
   (let ((table (copy-hash-table (first hashes) :empty T)))
