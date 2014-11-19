@@ -70,7 +70,7 @@
   (loop-hash (key _ hash) collect key))
 
 (defun hash-vals (hash) 
-  (loop-hash (_ vals hash) collect key))
+  (loop-hash (_ vals hash) collect vals))
 
 
 
